@@ -1,4 +1,24 @@
 #lang pl 02
+
+;=================Q1==================
+#|
+ <SE> ::= <String>
+         | <Chars>
+         | <Num>
+ 
+ <D> ::= 0|1|2|3|4|5|6|7|8|9 - one of 10 options
+ 
+ <Chars> :: = #\<D> | #\<D> <Chars> - #\2 #\9
+ 
+ <Num> ::= <D> | <D> <Num> - can represent the string length
+ 
+ <String> ::= <D>
+             |{ string-append <String> <String>} - (string-append(#\2 #\2) "0")
+             |{ string-append <String> <Chars>}  - (string-append("2066" #\8)
+             |{ string-append <String>}          
+             |{ string-insert <String> <Chars> <Num>}- (string-insert "2066" #\8 4)
+             |{ number->string <Num>} - string length
+ |#
  ;================Q2==================
 
 #|
@@ -23,3 +43,49 @@ Also, a starting “current” value must be provided before the lists.
 (test (sum_of_square '(0 1 2)) => 5)
 (test (sum_of_square '(10 10 10 10)) => 400)
 
+
+;==================Q3===========================
+; expt function taking two numbers 𝑎 and 𝑏, and returning 𝑎^𝑏.
+#|
+ poly : x - a given number , power -a power value that is raised in each round by 1,
+accum - and the accumulator that will hold the final value for us at each stage
+if we will get an empty list we will return the accum value, else we will use a tail recursion on the rest of the list
+that the pow value will up in 1 every time
+|#
+
+ (: createPolynomial : (Listof Number) -> (Number -> Number))
+(define (createPolynomial coeffs)
+ (: poly : (Listof Number) Number Integer Number ->
+Number)
+ (define (poly argsL x power accum)
+ (if (null? argsL) accum
+ (poly (rest argsL) x (+ power 1) (+ accum (* (first argsL) (expt x power))))))
+ (: polyX : Number -> Number)
+ (define (polyX x)
+ (poly coeffs x 0 0))
+ polyX)
+
+;=========test=======
+(define p2345 (createPolynomial '(2 3 4 5))) 
+(test (p2345 0) =>  
+   (+ (* 2 (expt 0 0)) (* 3 (expt 0 1)) (* 4 (expt 0 2)) (* 5 
+(expt 0 3)))) 
+(test (p2345 4) =>  
+   (+ (* 2 (expt 4 0)) (* 3 (expt 4 1)) (* 4 (expt 4 2)) (* 5 (expt 4 3)))) 
+(test (p2345 11) => (+ (* 2 (expt 11 0)) (* 3 (expt 11 1)) (* 4 (expt 11 2)) (* 5 (expt 11 3)))) 
+ 
+ 
+(define p536 (createPolynomial '(5 3 6))) 
+(test (p536 11) => (+ (* 5 (expt 11 0)) (* 3 (expt 11 1)) (* 6 
+(expt 11 2)))) 
+ 
+(define p_0 (createPolynomial '())) 
+(test (p_0 4) => 0) 
+
+(define p2066 (createPolynomial '(2 0 6 6)))
+(test (p2066 0) =>  
+   (+ (* 2 (expt 0 0)) (* 0 (expt 0 1)) (* 6 (expt 0 2)) (* 6 
+(expt 0 3))))
+(test (p2066 1) =>  
+   (+ (* 2 (expt 1 0)) (* 0 (expt 1 1)) (* 6 (expt 1 2)) (* 6 
+(expt 1 3))))
