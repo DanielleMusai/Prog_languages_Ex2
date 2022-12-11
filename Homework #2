@@ -1,0 +1,25 @@
+#lang pl 02
+ ;================Q2==================
+
+#|
+we were asked to write a sum of square function which takes a list of numbers as input
+and produces a number which is the sum of the squares of all of the numbers in the list
+for that we built the function 'sqr' which receives a number as input and returns its square.
+we also used the 'foldl' which generalizes some iteration functions. It uses the
+per-element function to both process an element and combine it with the “current” value,
+so the per-element function takes an extra first argument.
+Also, a starting “current” value must be provided before the lists.
+|#
+(: sqr : Number -> Number)
+(define (sqr x) (* x x))
+
+(: sum_of_square : (Listof Number) -> Number)
+(define (sum_of_square lst)
+(foldl + 0 (map sqr lst)))
+
+;======tests=======
+(test (sum_of_square '(1 2 3)) => 14)
+(test (sum_of_square '(0 0 0)) => 0)
+(test (sum_of_square '(0 1 2)) => 5)
+(test (sum_of_square '(10 10 10 10)) => 400)
+
