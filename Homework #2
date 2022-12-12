@@ -10,14 +10,46 @@
  
  <Chars> :: = #\<D> | #\<D> <Chars> - #\2 #\9
  
- <Num> ::= <D> | <D> <Num> - can represent the string length
+ <Num> ::= <D>
+          | <D> <Num>
+          |{string-length <String> }- can represent the string length
  
- <String> ::= <D>
+ <String> ::= <Num>
              |{ string-append <String> <String>} - (string-append(#\2 #\2) "0")
              |{ string-append <String> <Chars>}  - (string-append("2066" #\8)
              |{ string-append <String>}          
              |{ string-insert <String> <Chars> <Num>}- (string-insert "2066" #\8 4)
              |{ number->string <Num>} - string length
+
+ =========part b=========
+
+ ( string-append "45" ( number->string ( string-length "003" ) ))
+ <SE> = > <String>
+        > < {string-append <String> <String>}
+        > < {string-append <Num> <String>}
+        > < {string-append <D> <String>}
+        > < {string-append "4<D>" <String>}
+        > < {string-append "45" <String>}
+        > < {string-append "45" number->string <Num>}
+        > < {string-append "45" number->string ( string-length <String>)}
+        > < {string-append "45" number->string ( string-length "003")}
+      
+ 
+
+ ( number->string ( string-length "0033344" ) )
+ <SE> = > <String>
+        > {number->string (<Num>)}
+        > {number->string ( string-length <String> )}
+        > {number->string ( string-length "0033344")}
+     
+
+ (string-length "2066")
+ <SE> = > <String>
+        > <Num>
+        > {string-length <String>}
+        > {string-length "2066"}
+    
+
  |#
  ;================Q2==================
 
@@ -89,3 +121,4 @@ Number)
 (test (p2066 1) =>  
    (+ (* 2 (expt 1 0)) (* 0 (expt 1 1)) (* 6 (expt 1 2)) (* 6 
 (expt 1 3))))
+
